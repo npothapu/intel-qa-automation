@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/fs-extra": "^11.0.4"
+  },
+  "dependencies": {
+    "csv-parser": "^3.2.0",
+    "dotenv": "^16.5.0",
+    "playwright-html-reporter": "^0.1.11"
+  }
+}

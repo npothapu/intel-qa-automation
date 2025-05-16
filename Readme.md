@@ -1,70 +1,146 @@
 # Playwright Setup  
-**Created By:** Nandakumar Reddy, Associate Director Technology  
+**Created By:** Nandakumar Reddy, Associate Director, Technology  
 
-## Prerequisites  
+---
 
-Before setting up Playwright, ensure you have the following installed on your system:  
+## 🛠️ Prerequisites  
 
-- **Node.js (LTS version recommended)** – Download and install from [nodejs.org](https://nodejs.org/)  
-- **npm or yarn** – Comes with the Node.js installation  
-- **Git** – Recommended for version control  
+Before setting up Playwright, make sure the following are installed:
 
-## Setting Up Playwright  
+- **Node.js (LTS recommended)** – [Download here](https://nodejs.org/)  
+- **npm or yarn** – Comes with Node.js  
+- **Git** – For version control  
 
-> ✅ **Note:** For the most up-to-date and centralized Playwright installation steps, refer to our seed project guide here:  
+---
+
+## 🚀 Setting Up Playwright  
+
+> ✅ **Note:** For the most up-to-date steps, refer to the centralized guide:  
 > [How To: Playwright (Confluence)](https://confluence.uhub.biz/display/VMLGLOBAL/How+To%3A+Playwright)  
-> This ensures any future updates are automatically reflected without needing maintenance here.
 
-### 1. Install Playwright  
-Playwright requires browser binaries. Install them using:  
+---
 
-    npm install -D @playwright/test@latest
+### 1️⃣ Install Playwright  
 
+```bash
+npm install -D @playwright/test@latest
+```
 
-### 2. Install Browser Dependencies  
-Download the required browser binaries and system dependencies:
+---
 
+### 2️⃣ Install Browser Dependencies  
 
-    npx playwright install --with-deps
+```bash
+npx playwright install --with-deps
+```
 
+---
 
-### 3. Install Additional Dependencies  
-Install the required dependencies using:  
+### 3️⃣ Install Additional Dependencies  
 
-    npm install playwright-html-reporter dotenv csv-parser
-    //install below package for compare screenshots
-    npm install pixelmatch pngjs fs-extra
+#### Core dependencies:
+```bash
+npm install playwright-html-reporter dotenv csv-parser
+```
 
+#### Image comparison and file handling:
+```bash
+npm install pixelmatch pngjs fs-extra
+npm i --save-dev @types/pngjs
+```
 
-### 4. Project Structure  
-After running the setup, your project should contain the following structure:  
+#### For generating ZIP reports:
+```bash
+npm install adm-zip
+```
+
+---
+
+### 4️⃣ Project Structure  
 
 ```
 /scjohnson-qa-automation
-│── /env/   
-│── /node_modules/           # Installed dependencies
-│── /tests/                  # Playwright test files
-│── package.json             # Project metadata
-│── package-lock.json        # Dependency lock file
-│── playwright.config.ts     # Playwright configuration
-│── README.md
-```  
+├── /env/                    # .env, dev.env, etc.
+├── /node_modules/
+├── /tests/                 # Playwright test files
+├── /utils/                 # Custom helpers, breakpoints
+├── /screenshots/           # Baseline, actual, diff
+├── /report/                # Generated HTML and ZIP reports
+├── package.json
+├── playwright.config.ts
+├── README.md
+```
 
-### 5. Running Tests  
-To execute Playwright tests, use:  
+---
 
-```sh
+### 5️⃣ Running Tests  
+
+Use the following command to run tests with a specific environment:
+
+```bash
 $env:env="dev"; npx playwright test
 npx tsc
+```
 
-```  
-## Run Reports
+---
 
+## 📸 Visual Regression & Report Generation
 
-## Additional Configuration  
-Modify `playwright.config.ts` to customize settings such as timeouts, browser options, and test retries.  
+This project includes a **visual regression spec** (`visualRegression.spec.ts`) that:
 
-For more details, check the [Playwright documentation](https://playwright.dev/).  
+- Captures screenshots across browsers and breakpoints
+- Compares against baselines using `pixelmatch`
+- Generates a self-contained **HTML report** with embedded images
+- Creates a timestamped **ZIP file** for JIRA ticket attachment
 
- 
+### How to Run It
 
+```bash
+$env:env="dev"; npx playwright test tests/visualRegression.spec.ts
+$env:env="dev"; npx playwright test tests/componentPaddingCapture.spec.ts
+
+```
+
+After the test run, check the `/report/` folder. You’ll find:
+
+```
+/report
+├── visual-report-<timestamp>.html
+└── visual-report-<timestamp>.zip   ← Attach this to JIRA
+```
+
+The `.zip` includes an HTML file with side-by-side comparisons of:
+
+- ✅ Baseline
+- ✅ Actual
+- ✅ Diff
+
+---
+
+## 📊 Run Reports  
+
+If you use the built-in HTML reporter:
+
+```bash
+npx playwright show-report
+## below command will create playwright-report-aem.zip ready to be attached to Jira.
+npm run zip-report
+
+```
+
+To include visual regression results, use the custom HTML report created above in the `/report/` folder.
+
+---
+
+## ⚙️ Additional Configuration  
+
+Customize `playwright.config.ts` for:
+
+- Test retries
+- Viewport/device settings
+- Parallelism
+- Tracing
+
+📚 Learn more in the [Playwright documentation](https://playwright.dev/).
+
+---
